@@ -1045,8 +1045,7 @@ class MainActivity : ComponentActivity() {
                                             .weight(1f)
                                             .padding(4.dp)
                                             .clip(RoundedCornerShape(4.dp))
-                                            .background(Color(0xFFF0E8DC))
-                                            .clickable {currentScreen = "emptyText"},
+                                            .background(Color(0xFFF0E8DC)),
                                         contentAlignment = Alignment.Center
                                     )
                                     {
@@ -1063,8 +1062,7 @@ class MainActivity : ComponentActivity() {
                                             .weight(1f)
                                             .padding(4.dp)
                                             .clip(RoundedCornerShape(4.dp))
-                                            .background(Color(0xFFF0E8DC))
-                                            .clickable {currentScreen = "emptyText"},
+                                            .background(Color(0xFFF0E8DC)),
                                         contentAlignment = Alignment.Center
                                     )
                                     {
