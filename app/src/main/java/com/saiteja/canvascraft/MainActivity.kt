@@ -43,6 +43,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saiteja.canvascraft.ui.theme.CanvasCraftTheme
+import android.content.ContentValues
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.provider.MediaStore
+import android.os.Environment
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("Range")
@@ -51,6 +56,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CanvasCraftTheme {
+                var isDarkMode by remember { mutableStateOf(true) }
+                val bgColor = if(isDarkMode) Color(0xFF2A2A2A) else Color(0xFFF5F0EB)
+                val boxColor = if(isDarkMode) Color(0xFFF0E8DC) else Color(0xFF2A2A2A)
+                val previewBoxColor = if(isDarkMode) Color(0xFFF5F0EB) else Color(0xFFAAAAAA)
+                val textColor = if(isDarkMode) Color.Black else Color.White
+                val screenTextColor = if(isDarkMode) Color.White else Color.Black
+                val gridBg = if(isDarkMode) Color(0xFFF5F0EB) else Color(0xFF2A2A2A)
                 var cell1image by remember { mutableStateOf<Int?>(null) }
                 var cell2image by remember { mutableStateOf<Int?>(null) }
                 var cell3image by remember { mutableStateOf<Int?>(null) }
@@ -80,7 +92,7 @@ class MainActivity : ComponentActivity() {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color(0xFF2A2A2A))
+                            .background(bgColor)
                     ) {
                         var currentScreen by remember { mutableStateOf("gallery") }
                         var selector by remember { mutableStateOf("") }
@@ -96,13 +108,14 @@ class MainActivity : ComponentActivity() {
                                             .fillMaxSize()
                                             .padding(0.dp)
                                             .clip(RoundedCornerShape(16.dp))
-                                            .background(Color(0xFFF0E8DC))
+                                            .background(boxColor)
                                     ) {
                                         Text(
                                             text = "GALLERY",
                                             fontSize = 40.sp,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = FontFamily.Monospace,
+                                            color = textColor,
                                             letterSpacing = 2.sp
                                         )
                                     }
@@ -110,7 +123,7 @@ class MainActivity : ComponentActivity() {
                                 Column(modifier = Modifier.padding(8.dp)) {
                                     Text(
                                         text = "CHOOSE LAYOUT",
-                                        color = Color.White,
+                                        color = screenTextColor,
                                         fontSize = 30.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = FontFamily.Monospace,
@@ -126,7 +139,7 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .weight(1f)
                                             .background(
-                                                Color(0xFFF0E8DC),
+                                                boxColor,
                                                 RoundedCornerShape(16.dp)
                                             )
                                             .padding(vertical = 12.dp)
@@ -138,7 +151,7 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Text(
                                             "2 GRID",
-                                            color = Color.Black,
+                                            color = textColor,
                                             fontSize = 20.sp,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = FontFamily.Monospace,
@@ -148,7 +161,7 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .weight(1f)
                                             .background(
-                                                Color(0xFFF0E8DC),
+                                                boxColor,
                                                 RoundedCornerShape(16.dp)
                                             )
                                             .padding(vertical = 12.dp)
@@ -160,7 +173,7 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Text(
                                             "3 GRID",
-                                            color = Color.Black,
+                                            color = textColor,
                                             fontSize = 20.sp,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = FontFamily.Monospace,
@@ -173,14 +186,14 @@ class MainActivity : ComponentActivity() {
                                             modifier = Modifier
                                                 .height(200.dp)
                                                 .weight(1f)
-                                                .background(Color(0xFFF5F0EB))
+                                                .background(previewBoxColor)
                                         )
                                         Spacer(modifier = Modifier.width(6.dp))
                                         Box(
                                             modifier = Modifier
                                                 .height(200.dp)
                                                 .weight(1f)
-                                                .background(Color(0xFFF5F0EB))
+                                                .background(previewBoxColor)
                                         )
                                     }
                                     Spacer(modifier = Modifier.width(22.dp))
@@ -190,14 +203,14 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier
                                                     .height(100.dp)
                                                     .weight(1f)
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(previewBoxColor)
                                             )
                                             Spacer(modifier = Modifier.width(6.dp))
                                             Box(
                                                 modifier = Modifier
                                                     .height(100.dp)
                                                     .weight(1f)
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(previewBoxColor)
                                             )
                                         }
                                         Spacer(modifier = Modifier.height(6.dp))
@@ -205,7 +218,7 @@ class MainActivity : ComponentActivity() {
                                             modifier = Modifier
                                                 .height(95.dp)
                                                 .fillMaxWidth()
-                                                .background(Color(0xFFF5F0EB))
+                                                .background(previewBoxColor)
                                         )
                                     }
                                 }
@@ -220,7 +233,7 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .weight(1f)
                                             .background(
-                                                Color(0xFFF0E8DC),
+                                                boxColor,
                                                 RoundedCornerShape(16.dp)
                                             )
                                             .padding(vertical = 12.dp)
@@ -232,7 +245,7 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Text(
                                             "4 GRID",
-                                            color = Color.Black,
+                                            color = textColor,
                                             fontSize = 20.sp,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = FontFamily.Monospace
@@ -242,7 +255,7 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .weight(1f)
                                             .background(
-                                                Color(0xFFF0E8DC),
+                                                boxColor,
                                                 RoundedCornerShape(16.dp)
                                             )
                                             .padding(vertical = 12.dp)
@@ -254,7 +267,7 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         Text(
                                             "5 GRID",
-                                            color = Color.Black,
+                                            color = textColor,
                                             fontSize = 20.sp,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = FontFamily.Monospace
@@ -268,14 +281,14 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier
                                                     .height(100.dp)
                                                     .weight(1f)
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(previewBoxColor)
                                             )
                                             Spacer(modifier = Modifier.width(6.dp))
                                             Box(
                                                 modifier = Modifier
                                                     .height(100.dp)
                                                     .weight(1f)
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(previewBoxColor)
                                             )
                                         }
                                         Spacer(modifier = Modifier.height(6.dp))
@@ -284,14 +297,14 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier
                                                     .height(100.dp)
                                                     .weight(1f)
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(previewBoxColor)
                                             )
                                             Spacer(modifier = Modifier.width(6.dp))
                                             Box(
                                                 modifier = Modifier
                                                     .height(100.dp)
                                                     .weight(1f)
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(previewBoxColor)
                                             )
                                         }
                                     }
@@ -302,14 +315,14 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier
                                                     .height(61.dp)
                                                     .weight(1f)
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(previewBoxColor)
                                             )
                                             Spacer(modifier = Modifier.width(4.dp))
                                             Box(
                                                 modifier = Modifier
                                                     .height(61.dp)
                                                     .weight(1f)
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(previewBoxColor)
                                             )
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
@@ -318,14 +331,14 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier
                                                     .height(61.dp)
                                                     .weight(1f)
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(previewBoxColor)
                                             )
                                             Spacer(modifier = Modifier.width(4.dp))
                                             Box(
                                                 modifier = Modifier
                                                     .height(61.dp)
                                                     .weight(1f)
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(previewBoxColor)
                                             )
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
@@ -333,7 +346,48 @@ class MainActivity : ComponentActivity() {
                                             modifier = Modifier
                                                 .height(70.dp)
                                                 .fillMaxWidth()
-                                                .background(Color(0xFFF5F0EB))
+                                                .background(previewBoxColor)
+                                        )
+                                    }
+                                }
+                                Spacer(modifier = Modifier.height(16.dp))
+                                if(isDarkMode == true){
+                                    Box(modifier = Modifier
+                                            .padding(4.dp)
+                                            .clip(RoundedCornerShape(4.dp))
+                                            .background(boxColor)
+                                            .clickable {
+                                               isDarkMode = false
+                                            },
+                                        contentAlignment = Alignment.Center
+                                    )
+                                    {
+                                        Text(
+                                            "Light Mode",
+                                            color = textColor,
+                                            fontSize = 30.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Monospace
+                                        )
+                                    }
+                                }
+                                else{
+                                    Box(modifier = Modifier
+                                        .padding(4.dp)
+                                        .clip(RoundedCornerShape(4.dp))
+                                        .background(boxColor)
+                                        .clickable {
+                                            isDarkMode = true
+                                        },
+                                        contentAlignment = Alignment.Center
+                                    )
+                                    {
+                                        Text(
+                                            "Dark Mode",
+                                            color = textColor,
+                                            fontSize = 30.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = FontFamily.Monospace
                                         )
                                     }
                                 }
@@ -354,10 +408,11 @@ class MainActivity : ComponentActivity() {
                                         .fillMaxSize()
                                         .padding(0.dp)
                                         .clip(RoundedCornerShape(10.dp))
-                                        .background(Color(0xFFF0E8DC))
+                                        .background(boxColor)
                                 ) {
                                     Text(
                                         "  CUSTOM EDITOR",
+                                        color = textColor,
                                         fontSize = 30.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = FontFamily.Monospace
@@ -370,7 +425,7 @@ class MainActivity : ComponentActivity() {
                                             .fillMaxWidth()
                                             .height(450.dp)
                                             .clip(RoundedCornerShape(radiusValue.dp))
-                                            .background(Color(0xFFF5F0EB))
+                                            .background(gridBg)
                                             .padding(4.dp)
                                     ) {
                                         Row(
@@ -460,7 +515,7 @@ class MainActivity : ComponentActivity() {
                                             .height(450.dp)
                                             .clip(RoundedCornerShape(radiusValue.dp))
                                             .padding(4.dp)
-                                            .background(Color(0xFFF5F0EB))
+                                            .background(gridBg)
                                     )
                                     {
                                         Column(
@@ -589,7 +644,7 @@ class MainActivity : ComponentActivity() {
                                             .fillMaxWidth()
                                             .height(450.dp)
                                             .clip(RoundedCornerShape(radiusValue.dp))
-                                            .background(Color(0xFFF5F0EB))
+                                            .background(gridBg)
                                             .padding(4.dp)
                                     ) {
 
@@ -601,7 +656,7 @@ class MainActivity : ComponentActivity() {
                                             Row(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(gridBg)
                                                     .clip(RoundedCornerShape(radiusValue.dp)),
                                                 horizontalArrangement = Arrangement.spacedBy(
                                                     spacingValue.dp
@@ -685,7 +740,7 @@ class MainActivity : ComponentActivity() {
                                             Row(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
-                                                    .background(Color(0xFFF5F0EB))
+                                                    .background(gridBg)
                                                     .clip(RoundedCornerShape(radiusValue.dp)),
                                                 horizontalArrangement = Arrangement.spacedBy(
                                                     spacingValue.dp
@@ -775,7 +830,7 @@ class MainActivity : ComponentActivity() {
                                             .height(450.dp)
                                             .clip(RoundedCornerShape(radiusValue.dp))
                                             .padding(4.dp)
-                                            .background(Color(0xFFF5F0EB))
+                                            .background(gridBg)
                                     )
                                     {
                                         Column(
@@ -991,11 +1046,12 @@ class MainActivity : ComponentActivity() {
                                 Box(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(8.dp))
-                                        .background(Color(0xFFF0E8DC))
+                                        .background(boxColor)
                                 )
                                 {
                                     Text(
                                         "RADIUS : ${radiusValue.toInt()}",
+                                        color = textColor,
                                         fontSize = 30.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = FontFamily.Monospace
@@ -1007,19 +1063,20 @@ class MainActivity : ComponentActivity() {
                                     onValueChange = { newValue -> radiusValue = newValue },
                                     valueRange = 0f..100f,
                                     colors = SliderDefaults.colors(
-                                        thumbColor = Color(0xFFF0E8DC),
-                                        activeTrackColor = Color(0xFFF0E8DC)
+                                        thumbColor = boxColor,
+                                        activeTrackColor = boxColor
                                     ),
                                 )
                                 Spacer(modifier = Modifier.height(22.dp))
                                 Box(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(8.dp))
-                                        .background(Color(0xFFF0E8DC))
+                                        .background(boxColor)
                                 )
                                 {
                                     Text(
                                         "SPACING : ${spacingValue.toInt()}",
+                                        color = textColor,
                                         fontSize = 30.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = FontFamily.Monospace
@@ -1031,8 +1088,8 @@ class MainActivity : ComponentActivity() {
                                     onValueChange = { newValue -> spacingValue = newValue },
                                     valueRange = 0f..100f,
                                     colors = SliderDefaults.colors(
-                                        thumbColor = Color(0xFFF0E8DC),
-                                        activeTrackColor = Color(0xFFF0E8DC)
+                                        thumbColor = boxColor,
+                                        activeTrackColor = boxColor
                                     )
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
@@ -1040,34 +1097,54 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .padding(8.dp)
                                 ) {
-                                    Box(
+                                    /*Box(
                                         modifier = Modifier
                                             .weight(1f)
                                             .padding(4.dp)
                                             .clip(RoundedCornerShape(4.dp))
-                                            .background(Color(0xFFF0E8DC)),
+                                            .background(boxColor),
                                         contentAlignment = Alignment.Center
                                     )
                                     {
                                         Text(
                                             "SAVE",
+                                            color = textColor,
                                             fontSize = 30.sp,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = FontFamily.Monospace
                                         )
                                     }
-                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Spacer(modifier = Modifier.width(8.dp))*/
                                     Box(
                                         modifier = Modifier
                                             .weight(1f)
                                             .padding(4.dp)
                                             .clip(RoundedCornerShape(4.dp))
-                                            .background(Color(0xFFF0E8DC)),
+                                            .background(boxColor)
+                                            .clickable{
+                                                val bitmap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888)
+                                                val canvas = Canvas(bitmap)
+                                                canvas.drawColor(android.graphics.Color.WHITE)
+
+                                                val values = ContentValues().apply {
+                                                    put(MediaStore.Images.Media.DISPLAY_NAME, "CanvasCraft_${System.currentTimeMillis()}.jpg")
+                                                    put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                                                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                                                }
+
+                                                val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                                                uri?.let {
+                                                    contentResolver.openOutputStream(it)?.use { stream ->
+                                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                                                    }
+                                                }
+                                            },
                                         contentAlignment = Alignment.Center
                                     )
                                     {
                                         Text(
                                             "EXPORT",
+                                            color = textColor,
                                             fontSize = 30.sp,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = FontFamily.Monospace
@@ -1079,7 +1156,7 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .padding(4.dp)
                                         .clip(RoundedCornerShape(4.dp))
-                                        .background(Color(0xFFF0E8DC))
+                                        .background(boxColor)
                                         .clickable {
                                             currentScreen = "gallery"
                                             cell1image = null
@@ -1093,6 +1170,7 @@ class MainActivity : ComponentActivity() {
                                 {
                                     Text(
                                         "Go Back",
+                                        color = textColor,
                                         fontSize = 30.sp,
                                         fontWeight = FontWeight.Bold,
                                         fontFamily = FontFamily.Monospace
@@ -1317,7 +1395,7 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .padding(4.dp)
                                             .clip(RoundedCornerShape(4.dp))
-                                            .background(Color(0xFFF0E8DC))
+                                            .background(boxColor)
                                             .clickable {
                                                 currentScreen = "editor"
                                             },
@@ -1326,6 +1404,7 @@ class MainActivity : ComponentActivity() {
                                     {
                                         Text(
                                             "Go Back",
+                                            color = textColor,
                                             fontSize = 30.sp,
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = FontFamily.Monospace
