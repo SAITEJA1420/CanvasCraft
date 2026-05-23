@@ -43,11 +43,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.saiteja.canvascraft.ui.theme.CanvasCraftTheme
-import android.content.ContentValues
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.provider.MediaStore
-import android.os.Environment
+
+
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("Range")
@@ -1097,48 +1094,13 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .padding(8.dp)
                                 ) {
-                                    /*Box(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .padding(4.dp)
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(boxColor),
-                                        contentAlignment = Alignment.Center
-                                    )
-                                    {
-                                        Text(
-                                            "SAVE",
-                                            color = textColor,
-                                            fontSize = 30.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            fontFamily = FontFamily.Monospace
-                                        )
-                                    }
-                                    Spacer(modifier = Modifier.width(8.dp))*/
                                     Box(
                                         modifier = Modifier
                                             .weight(1f)
                                             .padding(4.dp)
                                             .clip(RoundedCornerShape(4.dp))
                                             .background(boxColor)
-                                            .clickable{
-                                                val bitmap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888)
-                                                val canvas = Canvas(bitmap)
-                                                canvas.drawColor(android.graphics.Color.WHITE)
-
-                                                val values = ContentValues().apply {
-                                                    put(MediaStore.Images.Media.DISPLAY_NAME, "CanvasCraft_${System.currentTimeMillis()}.jpg")
-                                                    put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                                                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-                                                }
-
-                                                val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-                                                uri?.let {
-                                                    contentResolver.openOutputStream(it)?.use { stream ->
-                                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                                                    }
-                                                }
-                                            },
+                                            .clickable{},
                                         contentAlignment = Alignment.Center
                                     )
                                     {
